@@ -13,10 +13,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect(process.env.MONGO_URI, {
+const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/club-patin';
+
+mongoose.connect(mongoUri, {
   useNewUrlParser: true,
   useUnifiedTopology: true
-}).then(() => console.log('Conectado a MongoDB')).catch(err => console.log(err));
+}).then(() => console.log('Conectado a MongoDB'))
+  .catch(err => console.error('Error al conectar a MongoDB:', err.message));
 
 app.use(session({
   secret: 'clave-supersecreta',
@@ -33,6 +36,9 @@ app.use('/uploads', express.static('uploads'));
 
 
 
-app.listen(process.env.PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${process.env.PORT}`);
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
+

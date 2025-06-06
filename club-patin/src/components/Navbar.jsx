@@ -61,6 +61,40 @@ export default function Navbar() {
     ? user.foto
     : user?.foto ? `http://localhost:5000${user.foto}` : null;
 
+  const getMenuLinks = () => {
+    if (!user) {
+      return [
+        { to: '/noticias', label: 'Noticias' },
+        { to: '/contacto', label: 'Contacto' }
+      ];
+    }
+
+    switch (user.tipoUsuario) {
+      case 'Tecnico':
+        return [
+          { to: '/dashboard', label: 'Dashboard' },
+          { to: '/alumnos', label: 'Alumnos' },
+          { to: '/gestionar', label: 'Gestionar Club' },
+          { to: '/noticias', label: 'Noticias' }
+        ];
+      case 'Delegado':
+        return [
+          { to: '/dashboard', label: 'Dashboard' },
+          { to: '/gestionar', label: 'Gestionar Club' },
+          { to: '/noticias', label: 'Noticias' },
+          { to: '/contacto', label: 'Contacto' }
+        ];
+      default:
+        return [
+          { to: '/dashboard', label: 'Dashboard' },
+          { to: '/noticias', label: 'Noticias' },
+          { to: '/contacto', label: 'Contacto' }
+        ];
+    }
+  };
+
+  const menuLinks = getMenuLinks();
+
   return (
     <nav style={styles.nav}>
       <div style={styles.left}>
@@ -68,10 +102,9 @@ export default function Navbar() {
       </div>
 
       <div style={styles.center}>
-        <Link to="/alumnos" style={styles.link}>Alumnos</Link>
-        <Link to="/gestionar" style={styles.link}>Gestionar Club</Link>
-        <Link to="/noticias" style={styles.link}>Noticias</Link>
-        <Link to="/contacto" style={styles.link}>Contacto</Link>
+        {menuLinks.map(link => (
+          <Link key={link.to} to={link.to} style={styles.link}>{link.label}</Link>
+        ))}
       </div>
 
       <div style={styles.right}>
